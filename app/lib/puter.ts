@@ -61,7 +61,7 @@ interface PuterStore {
       data: string | File | Blob,
     ) => Promise<File | undefined>;
     read: (path: string) => Promise<Blob | undefined>;
-    upload: (file: File[] | Blob[]) => Promise<FSItem | undefined>;
+    upload: (file: (File | Blob)[]) => Promise<FSItem | undefined>;
     delete: (path: string) => Promise<void>;
     readDir: (path: string) => Promise<FSItem[] | undefined>;
   };
@@ -99,22 +99,39 @@ interface PuterStore {
 const getPuter = (): typeof window.puter | null =>
   typeof window !== 'undefined' && window.puter ? window.puter : null;
 
-export const usePuterStore = create<PuterStore>((set, get) => {
+const usePuterStore = create<PuterStore>((set, get) => {
+  // const setError=(msg:string)=>{
+  //   set({
+  //     error: msg,
+  //     isLoading: false,
+  //     auth: {
+  //       user: null,
+  //       isAuthenticated: false,
+  //       signIn: get().auth.signIn,
+  //       signOut: get().auth.signOut,
+  //       refreshUser: get().auth.refreshUser,
+  //       checkAuthStatus: get().auth.checkAuthStatus,
+  //       getUser: get().auth.getUser,
+  //     },
+  //   });
+  // };
+
   const setError = (msg: string) => {
-    set({
+    set((state) => ({
+      ...state,
       error: msg,
       isLoading: false,
       auth: {
+        ...state.auth,
         user: null,
         isAuthenticated: false,
-        signIn: get().auth.signIn,
-        signOut: get().auth.signOut,
-        refreshUser: get().auth.refreshUser,
-        checkAuthStatus: get().auth.checkAuthStatus,
-        getUser: get().auth.getUser,
       },
-    });
+    }));
   };
+
+
+
+
 
   const checkAuthStatus = async (): Promise<boolean> => {
     const puter = getPuter();
@@ -245,7 +262,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
     const puter = getPuter();
     if (puter) {
       set({ puterReady: true });
-      checkAuthStatus();
+      void checkAuthStatus();
       return;
     }
 
@@ -253,7 +270,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
       if (getPuter()) {
         clearInterval(interval);
         set({ puterReady: true });
-        checkAuthStatus();
+        void checkAuthStatus();
       }
     }, 100);
 
@@ -454,3 +471,4 @@ export const usePuterStore = create<PuterStore>((set, get) => {
     clearError: () => set({ error: null }),
   };
 });
+export default usePuterStore

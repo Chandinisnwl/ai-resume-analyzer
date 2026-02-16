@@ -88,7 +88,8 @@ const Resume = () => {
             </div>
           ) : (
             <img src="public/fonts/images/resume-scan-2.gif" className="w-full" />
-          )}
+          )
+          }
         </section>
       </div>
     </main>

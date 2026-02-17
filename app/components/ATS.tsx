@@ -22,10 +22,10 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
   // Determine icon based on score
   const iconSrc =
     score > 69
-      ? '/public/fonts/icons/ats-good.svg'
+      ? '/icons/ats-good.svg'
       : score > 49
-        ? '/public/fonts/icons/ats-warning.svg'
-        : '/public/fonts/icons/ats-bad.svg';
+        ? '/icons/ats-warning.svg'
+        : '/icons/ats-bad.svg';
 
   // Determine subtitle based on score
   const subtitle =
